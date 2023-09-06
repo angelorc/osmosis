@@ -13,13 +13,13 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/osmosis-labs/osmosis/v17/app/apptesting"
-	v17 "github.com/osmosis-labs/osmosis/v17/app/upgrades/v17"
+	"github.com/osmosis-labs/osmosis/v19/app/apptesting"
+	v17 "github.com/osmosis-labs/osmosis/v19/app/upgrades/v17"
 
-	gammmigration "github.com/osmosis-labs/osmosis/v17/x/gamm/types/migration"
-	lockuptypes "github.com/osmosis-labs/osmosis/v17/x/lockup/types"
-	protorevtypes "github.com/osmosis-labs/osmosis/v17/x/protorev/types"
-	superfluidtypes "github.com/osmosis-labs/osmosis/v17/x/superfluid/types"
+	gammmigration "github.com/osmosis-labs/osmosis/v19/x/gamm/types/migration"
+	lockuptypes "github.com/osmosis-labs/osmosis/v19/x/lockup/types"
+	protorevtypes "github.com/osmosis-labs/osmosis/v19/x/protorev/types"
+	superfluidtypes "github.com/osmosis-labs/osmosis/v19/x/superfluid/types"
 )
 
 type UpgradeTestSuite struct {
@@ -106,6 +106,7 @@ func (s *UpgradeTestSuite) TestUpgrade() {
 
 	// Swap
 	toSwap := sdk.NewCoin(pool.GetToken0(), sdk.NewInt(100))
+	s.FundAcc(s.TestAccs[0], sdk.NewCoins(toSwap))
 	_, err = s.App.ConcentratedLiquidityKeeper.SwapExactAmountIn(s.Ctx, s.TestAccs[0], updatedCLPool, toSwap, pool.GetToken1(), sdk.NewInt(1), sdk.ZeroDec())
 	s.Require().NoError(err)
 
@@ -233,7 +234,7 @@ func (suite *UpgradeTestSuite) ensurePreUpgradeDistributionPanics() {
 	suite.App.ConcentratedLiquidityKeeper.SetParams(suite.Ctx, clParams)
 
 	// prepare CL pool with the same denom as pool 3, which is the pool we are testing with
-	clPool := suite.PrepareConcentratedPoolWithCoins(v17.OSMO, v17.AKTIBCDenom)
+	clPool := suite.PrepareConcentratedPoolWithCoins(v17.AKTIBCDenom, v17.OSMO)
 	balancerToCLPoolLink := []gammmigration.BalancerToConcentratedPoolLink{
 		{
 			BalancerPoolId: 3,

@@ -8,9 +8,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/osmosis-labs/osmosis/v17/x/incentives/types"
-	lockuptypes "github.com/osmosis-labs/osmosis/v17/x/lockup/types"
-	poolmanagertypes "github.com/osmosis-labs/osmosis/v17/x/poolmanager/types"
+	"github.com/osmosis-labs/osmosis/v19/x/incentives/types"
+	lockuptypes "github.com/osmosis-labs/osmosis/v19/x/lockup/types"
+	poolmanagertypes "github.com/osmosis-labs/osmosis/v19/x/poolmanager/types"
 )
 
 // getDistributedCoinsFromGauges returns coins that have been distributed already from the provided gauges
@@ -352,6 +352,27 @@ func (k Keeper) distributeInternal(
 			totalDistrCoins = totalDistrCoins.Add(remainCoinPerEpoch)
 		}
 	} else {
+		// This is a standard lock distribution flow that assumes that we have locks associated with the gauge.
+		if len(locks) == 0 {
+			return nil, nil
+		}
+
+		// In this case, remove redundant cases.
+		// Namely: gauge empty OR gauge coins undistributable.
+		if remainCoins.Empty() {
+			ctx.Logger().Debug(fmt.Sprintf("gauge debug, this gauge is empty, why is it being ran %d. Balancer code", gauge.Id))
+			err := k.updateGaugePostDistribute(ctx, gauge, totalDistrCoins)
+			return totalDistrCoins, err
+		}
+
+		// Remove some spam gauges, is state compatible.
+		// If they're to pool 1 they can't distr at this small of a quantity.
+		if remainCoins.Len() == 1 && remainCoins[0].Amount.LTE(sdk.NewInt(10)) && gauge.DistributeTo.Denom == "gamm/pool/1" && remainCoins[0].Denom != "uosmo" {
+			ctx.Logger().Debug(fmt.Sprintf("gauge debug, this gauge is perceived spam, skipping %d", gauge.Id))
+			err := k.updateGaugePostDistribute(ctx, gauge, totalDistrCoins)
+			return totalDistrCoins, err
+		}
+
 		// This is a standard lock distribution flow that assumes that we have locks associated with the gauge.
 		denom := lockuptypes.NativeDenom(gauge.DistributeTo.Denom)
 		lockSum := lockuptypes.SumLocksByDenom(locks, denom)

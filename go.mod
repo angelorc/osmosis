@@ -1,4 +1,4 @@
-module github.com/osmosis-labs/osmosis/v17
+module github.com/osmosis-labs/osmosis/v19
 
 go 1.20
 
@@ -6,7 +6,7 @@ require (
 	cosmossdk.io/errors v1.0.0
 	github.com/CosmWasm/wasmd v0.31.0
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3
-	github.com/cosmos/cosmos-sdk v0.47.4
+	github.com/cosmos/cosmos-sdk v0.47.5
 	github.com/cosmos/go-bip39 v1.0.0
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v4 v4.1.0
 	github.com/cosmos/ibc-apps/modules/async-icq/v4 v4.1.0

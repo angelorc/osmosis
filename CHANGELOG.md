@@ -40,20 +40,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v19.0.0
+
+### Features
+
+* [#6034](https://github.com/osmosis-labs/osmosis/pull/6034) Taker fee
+
+### Bug Fixes
+* [#6190](https://github.com/osmosis-labs/osmosis/pull/6190) v19 upgrade handler superfluid fix
+* [#6195](https://github.com/osmosis-labs/osmosis/pull/6195) (x/tokenfactory) Fix events for `mintTo` and `burnFrom`
+* [#6195](https://github.com/osmosis-labs/osmosis/pull/6195) Fix panic edge case in superfluid AfterEpochEnd hook by surrounding CL multipler update with ApplyFuncIfNoError
+
+### Misc Improvements
+
+### Minor improvements & Bug Fixes
+
+### Security
 
 ## v18.0.0
 
+<<<<<<< HEAD
+=======
+### Misc Improvements
+
+* [#6161](https://github.com/osmosis-labs/osmosis/pull/6161) Reduce CPU time of epochs
+
+### Bug Fixes
+
+* [#6162](https://github.com/osmosis-labs/osmosis/pull/6162) allow zero qualifying balancer shares in CL incentives
+
+### Features
+
+* [#6034](https://github.com/osmosis-labs/osmosis/pull/6034) feat(spike): taker fee
+## v18.0.0
+
+>>>>>>> 5c8fd80f (feat(spike): taker fee (#6034))
 Fixes mainnet bugs w/ incorrect accumulation sumtrees, and CL handling for a balancer pool with 0 bonded shares.
 
 ### Improvements
 
 * [#6144](https://github.com/osmosis-labs/osmosis/pull/6144) perf: Speedup compute time of Epoch
 * [#6144](https://github.com/osmosis-labs/osmosis/pull/6144) misc: Move many Superfluid info logs to debug logs
+* [#6161](https://github.com/osmosis-labs/osmosis/pull/6161) Reduce CPU time of epochs
 
 ### API breaks
 
 * [#6071](https://github.com/osmosis-labs/osmosis/pull/6071) reduce number of returns for UpdatePosition and TicksToSqrtPrice functions
+
+### Bug Fixes
+
+* [#6162](https://github.com/osmosis-labs/osmosis/pull/6162) allow zero qualifying balancer shares in CL incentives
+* [#6053](https://github.com/osmosis-labs/osmosis/pull/6053) monotonic sqrt with 36 decimals
 
 ## v17.0.0
 
