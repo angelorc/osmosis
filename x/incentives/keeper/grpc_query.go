@@ -317,3 +317,30 @@ func (k Keeper) queryWeightSplitGroup(ctx sdk.Context, group types.Group) ([]typ
 
 	return gaugeVolumes, nil
 }
+
+func (k Keeper) LockedByGaugeID(goCtx context.Context, req *types.LockedByGaugeIDRequest) (*types.LockedByGaugeIDResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	gauge, err := k.GetGaugeByID(ctx, req.GaugeID)
+	if err != nil {
+		return &types.LockedByGaugeIDResponse{}, err
+	}
+
+	denom := gauge.DistributeTo.Denom
+
+	locksByDenomCache := make(map[string][]lockuptypes.PeriodLock)
+	locks := k.getDistributeToBaseLocks(ctx, *gauge, locksByDenomCache)
+	lockSum := lockuptypes.SumLocksByDenom(locks, denom)
+
+	if lockSum.IsZero() {
+		return &types.LockedByGaugeIDResponse{
+			Denom:   denom,
+			LockSum: "0",
+		}, nil
+	}
+
+	return &types.LockedByGaugeIDResponse{
+		Denom:   denom,
+		LockSum: lockSum.String(),
+	}, nil
+}
