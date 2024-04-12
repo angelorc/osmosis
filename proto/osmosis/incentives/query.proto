@@ -14,6 +14,12 @@ option go_package = "github.com/osmosis-labs/osmosis/v24/x/incentives/types";
 
 // Query defines the gRPC querier service
 service Query {
+  // sinfonia apr
+  rpc LockedByGaugeID(LockedByGaugeIDRequest)
+      returns (LockedByGaugeIDResponse) {
+    option (google.api.http).get =
+        "/osmosis/lockup/v1beta1/locked_by_gauge_id/{gaugeID}";
+  }
   // ModuleToDistributeCoins returns coins that are going to be distributed
   rpc ModuleToDistributeCoins(ModuleToDistributeCoinsRequest)
       returns (ModuleToDistributeCoinsResponse) {
@@ -236,4 +242,13 @@ message GaugeWeight {
     (gogoproto.moretags) = "yaml:\"weight_ratio\"",
     (gogoproto.nullable) = false
   ];
+}
+
+// sinfonia apr
+message LockedByGaugeIDRequest {
+  uint64 gaugeID = 1 [ (gogoproto.moretags) = "yaml:\"gauge_id\"" ];
+}
+message LockedByGaugeIDResponse {
+  string denom = 1;
+  string lockSum = 2;
 }
